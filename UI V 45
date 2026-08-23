@@ -2616,7 +2616,6 @@ do
 					ZIndex = 5,
 					AutomaticSize = Enum.AutomaticSize.X,
 					TextSize = 14,
-					RichText = true,
 					BackgroundColor3 = FromRGB(255, 255, 255),
 				})
 				Items["Text"]:AddToTheme({ TextColor3 = "Text" })
@@ -3374,7 +3373,7 @@ do
 			Data = Data or {}
 
 			local Window = {
-				Name = Data.Name or Data.name or "Bypass Hub",
+				Name = Data.Name or Data.name or "Bronx Dupe",
 				Logo = Data.Logo or Data.logo or "76579136628995",
 
 				Pages = {},
@@ -3466,9 +3465,9 @@ do
 				Items["Logo"] = Instances:Create("ImageLabel", {
 					Parent = Items["Inline"].Instance,
 					Name = "\0",
-					ImageColor3 = FromRGB(255, 255, 255),
+					ImageColor3 = FromRGB(255, 0, 0),
 					BorderColor3 = FromRGB(0, 0, 0),
-					Image = "rbxassetid://76579136628995",
+					Image = "rbxassetid://77298421442104",
 					BackgroundTransparency = 1,
 					Position = UDim2New(0, 8, 0, 10),
 					Size = UDim2New(0, 18, 0, 18),
@@ -3625,6 +3624,8 @@ do
 				end)
 			end
 
+			-- Polished launcher kept away from the centered window. It stays visible
+			-- because it is parented to the ScreenGui rather than MainFrame.
 			Items["MenuButton"] = Instances:Create("TextButton", {
 				Parent = Library.Holder.Instance,
 				Name = "WindowToggleButton",
@@ -4162,7 +4163,6 @@ do
 				Section = self,
 
 				Name = Data.Name or Data.name or "Toggle",
-				Risky = Data.Risky or Data.risky or false,
 				Flag = Data.Flag or Data.flag or Library:NextFlag(),
 				Default = Data.Default or Data.default or false,
 				Callback = Data.Callback or Data.callback or function() end,
@@ -4224,7 +4224,7 @@ do
 					Parent = Items["Toggle"].Instance,
 					Name = "\0",
 					FontFace = Library.Font,
-					TextColor3 = FromRGB(255, 0, 0),
+					TextColor3 = FromRGB(255, 255, 255),
 					TextTransparency = 0.4000000059604645,
 					Text = Toggle.Name,
 					Size = UDim2New(0, 0, 0, 15),
@@ -5631,7 +5631,7 @@ do
 				Library:RefreshConfigsList(ConfigsSearchbox)
 			end
 
-			local ThemingSection = SettingsPage:Section({ Name = "Theming", Side = 1 })
+			local ThemingSection = SettingsPage:Section({ Name = "Theming", Side = 2 })
 			do
 				for Index, Value in Library.Theme do
 					ThemingSection:Label(Index):Colorpicker({
@@ -5648,28 +5648,5 @@ do
 	end
 end
 
-getgenv().Status = "🟢"
-
-local LoadTick = os.clock()
-local ElapsedTime = 0
-
-local FormatTime = function(Seconds)
-	local Hours = math.floor(Seconds / 3600)
-	local Minutes = math.floor((Seconds % 3600) / 60)
-	local Seconds = math.floor(Seconds % 60)
-	
-	return string.format("%02d:%02d:%02d", Hours, Minutes, Seconds)
-end
-
-do --// UI Library
-    local Watermark = Library:Watermark("404")
-
-	task.spawn(function()
-		while task.wait(1) do
-			ElapsedTime = ElapsedTime + 1
-			Watermark:SetText(string.format('<font color="rgb(255,255,255)">Bypass </font><font color="rgb(%d,%d,%d)">Hub</font> | %s | %s | %s', Library.Theme.Accent.R * 255, Library.Theme.Accent.G * 255,Library.Theme.Accent.B * 255, getgenv().Status, "South brounx", FormatTime(ElapsedTime)))
-		end
-	end)
-end
-
---// End
+getgenv().Library = Library
+return Library
