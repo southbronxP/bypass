@@ -3374,8 +3374,8 @@ do
 			Data = Data or {}
 
 			local Window = {
-				Name = Data.Name or Data.name or "Bypass Hub",
-				Logo = Data.Logo or Data.logo or "76579136628995",
+				Name = Data.Name or Data.name or "Skid Hub",
+				Logo = Data.Logo or Data.logo or "108251544321210",
 
 				Pages = {},
 				Items = {},
@@ -3468,7 +3468,7 @@ do
 					Name = "\0",
 					ImageColor3 = FromRGB(255, 255, 255),
 					BorderColor3 = FromRGB(0, 0, 0),
-					Image = "rbxassetid://76579136628995",
+					Image = "rbxassetid://108251544321210",
 					BackgroundTransparency = 1,
 					Position = UDim2New(0, 8, 0, 10),
 					Size = UDim2New(0, 18, 0, 18),
