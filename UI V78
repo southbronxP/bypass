@@ -1214,6 +1214,34 @@
                     BackgroundColor3 = rgb(0, 0, 0)
                 }); Items.Window.Position = dim2(0, Items.Window.AbsolutePosition.X, 0, Items.Window.AbsolutePosition.Y); Library:Themify(Items.Window, "window_outline", "BackgroundColor3");
 
+                -- Scale the complete existing interface to fit phone screens.
+                if InputService.TouchEnabled then
+                    local viewport = Camera.ViewportSize
+                    local availableWidth = math.max(240, viewport.X - 24)
+                    local availableHeight = math.max(220, viewport.Y - 110)
+                    local fitScale = math.min(
+                        availableWidth / math.max(Cfg.Size.X.Offset, 1),
+                        availableHeight / math.max(Cfg.Size.Y.Offset, 1)
+                    )
+                    local mobileScale = math.clamp(fitScale, 0.45, 0.78)
+
+                    Items.MobileScale = Library:Create("UIScale", {
+                        Parent = Items.Window;
+                        Scale = mobileScale;
+                    })
+
+                    Library:Connection(Camera:GetPropertyChangedSignal("ViewportSize"), function()
+                        local newViewport = Camera.ViewportSize
+                        local width = math.max(240, newViewport.X - 24)
+                        local height = math.max(220, newViewport.Y - 110)
+                        local scale = math.min(
+                            width / math.max(Cfg.Size.X.Offset, 1),
+                            height / math.max(Cfg.Size.Y.Offset, 1)
+                        )
+                        Items.MobileScale.Scale = math.clamp(scale, 0.45, 0.78)
+                    end)
+                end
+
                 Items.Outline = Library:Create("Frame", {
                     Parent = Items.Window;
                     Name = "\0";
@@ -1462,55 +1490,76 @@
                 end)
             end
 
-            -- Separate bottom-left controls remain available while the main window is hidden.
+            -- Fixed bottom-left menu control. Both states occupy the exact same position.
             do
                 local mobile = InputService.TouchEnabled
-                local buttonWidth = mobile and 112 or 104
-                local buttonHeight = mobile and 38 or 32
-                local bottomOffset = mobile and 22 or 16
+                local buttonWidth = mobile and 96 or 104
+                local buttonHeight = mobile and 32 or 32
+                local bottomOffset = mobile and 18 or 16
+                local leftOffset = 14
 
-                local function createMenuControl(text, position)
+                local function createMenuControl(text)
                     local button = Library:Create("TextButton", {
                         Name = "MenuVisibilityControl";
                         Parent = Library.Items;
                         AnchorPoint = vec2(0, 1);
-                        Position = position;
+                        Position = dim2(0, leftOffset, 1, -bottomOffset);
                         Size = dim2(0, buttonWidth, 0, buttonHeight);
-                        BackgroundColor3 = themes.preset.inline;
+                        BackgroundColor3 = themes.preset.window_outline;
                         BorderSizePixel = 0;
                         AutoButtonColor = false;
-                        Text = text;
-                        TextColor3 = themes.preset.text_color;
-                        TextSize = mobile and 14 or 13;
-                        FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+                        Text = "";
                         ZIndex = 1000;
                         Visible = true;
                     })
 
-                    Library:Create("UICorner", {
+                    -- Match the main window's layered dark background and accent edge.
+                    Library:Create("Frame", {
+                        Name = "ControlInline";
                         Parent = button;
-                        CornerRadius = dim(0, 6);
+                        Position = dim2(0, 1, 0, 1);
+                        Size = dim2(1, -2, 1, -2);
+                        BackgroundColor3 = themes.preset.inline;
+                        BorderSizePixel = 0;
+                        ZIndex = 1001;
+                    })
+
+                    local face = Library:Create("Frame", {
+                        Name = "ControlFace";
+                        Parent = button.ControlInline;
+                        Position = dim2(0, 1, 0, 1);
+                        Size = dim2(1, -2, 1, -2);
+                        BackgroundColor3 = themes.preset.background;
+                        BorderSizePixel = 0;
+                        ZIndex = 1002;
+                    })
+
+                    Library:Create("TextLabel", {
+                        Name = "ControlText";
+                        Parent = face;
+                        BackgroundTransparency = 1;
+                        Size = dim2(1, 0, 1, 0);
+                        Text = text;
+                        TextColor3 = themes.preset.text_color;
+                        TextSize = mobile and 12 or 13;
+                        FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+                        TextXAlignment = Enum.TextXAlignment.Center;
+                        TextYAlignment = Enum.TextYAlignment.Center;
+                        ZIndex = 1003;
                     })
 
                     Library:Create("UIStroke", {
                         Parent = button;
                         Color = themes.preset.accent;
                         Thickness = 1;
-                        Transparency = 0.15;
+                        Transparency = 0.2;
                     })
 
                     return button
                 end
 
-                local gap = 8
-                Items.HideMenuButton = createMenuControl(
-                    "Hide Menu",
-                    dim2(0, 16, 1, -bottomOffset)
-                )
-                Items.ShowMenuButton = createMenuControl(
-                    "Show Menu",
-                    dim2(0, 16 + buttonWidth + gap, 1, -bottomOffset)
-                )
+                Items.HideMenuButton = createMenuControl("Hide Menu")
+                Items.ShowMenuButton = createMenuControl("Show Menu")
                 Items.ShowMenuButton.Visible = false
 
                 Items.HideMenuButton.Activated:Connect(function()
