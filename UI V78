@@ -1452,8 +1452,79 @@
                     task.wait()
                     Cfg.Tweening = false
                     Items.Window.Visible = bool
+
+                    if Items.HideMenuButton then
+                        Items.HideMenuButton.Visible = bool
+                    end
+                    if Items.ShowMenuButton then
+                        Items.ShowMenuButton.Visible = not bool
+                    end
                 end)
-            end 
+            end
+
+            -- Separate bottom-left controls remain available while the main window is hidden.
+            do
+                local mobile = InputService.TouchEnabled
+                local buttonWidth = mobile and 112 or 104
+                local buttonHeight = mobile and 38 or 32
+                local bottomOffset = mobile and 22 or 16
+
+                local function createMenuControl(text, position)
+                    local button = Library:Create("TextButton", {
+                        Name = "MenuVisibilityControl";
+                        Parent = Library.Items;
+                        AnchorPoint = vec2(0, 1);
+                        Position = position;
+                        Size = dim2(0, buttonWidth, 0, buttonHeight);
+                        BackgroundColor3 = themes.preset.inline;
+                        BorderSizePixel = 0;
+                        AutoButtonColor = false;
+                        Text = text;
+                        TextColor3 = themes.preset.text_color;
+                        TextSize = mobile and 14 or 13;
+                        FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+                        ZIndex = 1000;
+                        Visible = true;
+                    })
+
+                    Library:Create("UICorner", {
+                        Parent = button;
+                        CornerRadius = dim(0, 6);
+                    })
+
+                    Library:Create("UIStroke", {
+                        Parent = button;
+                        Color = themes.preset.accent;
+                        Thickness = 1;
+                        Transparency = 0.15;
+                    })
+
+                    return button
+                end
+
+                local gap = 8
+                Items.HideMenuButton = createMenuControl(
+                    "Hide Menu",
+                    dim2(0, 16, 1, -bottomOffset)
+                )
+                Items.ShowMenuButton = createMenuControl(
+                    "Show Menu",
+                    dim2(0, 16 + buttonWidth + gap, 1, -bottomOffset)
+                )
+                Items.ShowMenuButton.Visible = false
+
+                Items.HideMenuButton.Activated:Connect(function()
+                    if not Cfg.Tweening then
+                        Cfg.ToggleMenu(false)
+                    end
+                end)
+
+                Items.ShowMenuButton.Activated:Connect(function()
+                    if not Cfg.Tweening then
+                        Cfg.ToggleMenu(true)
+                    end
+                end)
+            end
 
             function Cfg.ChangeMenuTitle(text)
                 Items.UITitle.Text = text
