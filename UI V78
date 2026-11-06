@@ -1207,12 +1207,18 @@
                 Items.Window = Library:Create("Frame", {
                     Parent = Library.Items;
                     Name = "\0";
-                    Position = dim2(0.5, -Cfg.Size.X.Offset / 2, 0.5, -Cfg.Size.Y.Offset / 2);
+                    AnchorPoint = vec2(0.5, 0.5);
+                    Position = dim2(0.5, 0, 0.5, 0);
                     BorderColor3 = rgb(0, 0, 0);
                     Size = Cfg.Size;
                     BorderSizePixel = 0;
                     BackgroundColor3 = rgb(0, 0, 0)
-                }); Items.Window.Position = dim2(0, Items.Window.AbsolutePosition.X, 0, Items.Window.AbsolutePosition.Y); Library:Themify(Items.Window, "window_outline", "BackgroundColor3");
+                }); Library:Themify(Items.Window, "window_outline", "BackgroundColor3");
+
+                -- Keep the main panel centered when the viewport changes (including rotation).
+                Library:Connection(Camera:GetPropertyChangedSignal("ViewportSize"), function()
+                    Items.Window.Position = dim2(0.5, 0, 0.5, 0)
+                end)
 
                 -- Scale the complete existing interface to fit phone screens.
                 if InputService.TouchEnabled then
@@ -1452,7 +1458,12 @@
                     return 
                 end 
 
-                Cfg.Tweening = true 
+                Cfg.Tweening = true
+
+                if bool then
+                    Items.Window.AnchorPoint = vec2(0.5, 0.5)
+                    Items.Window.Position = dim2(0.5, 0, 0.5, 0)
+                end
 
                 Items.Window.Visible = true
 
@@ -1483,27 +1494,45 @@
 
                     if Items.HideMenuButton then
                         Items.HideMenuButton.Visible = bool
+                        Items.HideMenuGlow.Visible = bool
                     end
                     if Items.ShowMenuButton then
                         Items.ShowMenuButton.Visible = not bool
+                        Items.ShowMenuGlow.Visible = not bool
                     end
                 end)
             end
 
-            -- Fixed bottom-left menu control. Both states occupy the exact same position.
+            -- Menu controls stay in the bottom-left corner on desktop and mobile.
             do
                 local mobile = InputService.TouchEnabled
                 local buttonWidth = mobile and 96 or 104
-                local buttonHeight = mobile and 32 or 32
-                local bottomOffset = mobile and 18 or 16
-                local leftOffset = 14
+                local buttonHeight = 32
+                local controlPosition = dim2(0, 16, 1, -16)
 
                 local function createMenuControl(text)
+                    local glow = Library:Create("ImageLabel", {
+                        Name = "MenuControlGlow";
+                        Parent = Library.Items;
+                        AnchorPoint = vec2(0.5, 0.5);
+                        Position = dim2(0, 16 + buttonWidth / 2, 1, -16 - buttonHeight / 2);
+                        Size = dim2(0, buttonWidth + 36, 0, buttonHeight + 36);
+                        Image = "rbxassetid://18245826428";
+                        ImageColor3 = themes.preset.glow;
+                        ImageTransparency = 0.65;
+                        ScaleType = Enum.ScaleType.Slice;
+                        SliceCenter = rect(vec2(21, 21), vec2(79, 79));
+                        BackgroundTransparency = 1;
+                        BorderSizePixel = 0;
+                        ZIndex = 998;
+                    })
+                    Library:Themify(glow, "glow", "ImageColor3")
+
                     local button = Library:Create("TextButton", {
                         Name = "MenuVisibilityControl";
                         Parent = Library.Items;
                         AnchorPoint = vec2(0, 1);
-                        Position = dim2(0, leftOffset, 1, -bottomOffset);
+                        Position = controlPosition;
                         Size = dim2(0, buttonWidth, 0, buttonHeight);
                         BackgroundColor3 = themes.preset.window_outline;
                         BorderSizePixel = 0;
@@ -1513,7 +1542,6 @@
                         Visible = true;
                     })
 
-                    -- Match the main window's layered dark background and accent edge.
                     Library:Create("Frame", {
                         Name = "ControlInline";
                         Parent = button;
@@ -1555,12 +1583,13 @@
                         Transparency = 0.2;
                     })
 
-                    return button
+                    return button, glow
                 end
 
-                Items.HideMenuButton = createMenuControl("Hide Menu")
-                Items.ShowMenuButton = createMenuControl("Show Menu")
+                Items.HideMenuButton, Items.HideMenuGlow = createMenuControl("Hide Menu")
+                Items.ShowMenuButton, Items.ShowMenuGlow = createMenuControl("Show Menu")
                 Items.ShowMenuButton.Visible = false
+                Items.ShowMenuGlow.Visible = false
 
                 Items.HideMenuButton.Activated:Connect(function()
                     if not Cfg.Tweening then
