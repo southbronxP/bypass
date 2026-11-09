@@ -1416,9 +1416,15 @@
                         else
                             return
                         end
-                        local newX = StartPos.X.Offset + delta.X
-                        local newY = StartPos.Y.Offset + delta.Y
-                        Items.Window.Position = UDim2.new(0, newX, 0, newY)
+                        -- Preserve the original scale components. The window is centered
+                        -- with 0.5 scale; replacing them with 0 caused it to jump top-left
+                        -- the first time it was dragged after reopening.
+                        Items.Window.Position = UDim2.new(
+                            StartPos.X.Scale,
+                            StartPos.X.Offset + delta.X,
+                            StartPos.Y.Scale,
+                            StartPos.Y.Offset + delta.Y
+                        )
                     end
                 end
 
@@ -2702,12 +2708,17 @@ Items.Input = Library:Create("TextBox", {
     Parent = Items.Inline;
     FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
     Name = "\0";
-    Active = false;
+    -- TextBoxes must be active/selectable for touch input and the mobile keyboard.
+    Active = true;
+    Selectable = true;
+    ClearTextOnFocus = false;
+    TextEditable = true;
+    MultiLine = false;
     BorderColor3 = rgb(0, 0, 0);
     Text = tostring(Cfg.Default or "");
     PlaceholderText = tostring(Cfg.PlaceHolder or "Type here...");
-    Size = dim2(1, 0, 1, 0);
-    Selectable = false;
+    Size = dim2(1, -6, 1, 0);
+    Selectable = true;
     Position = dim2(0, 3, 0, 0);
     BorderSizePixel = 0;
     TextTruncate = Enum.TextTruncate.AtEnd;
@@ -2729,6 +2740,18 @@ Items.Input = Library:Create("TextBox", {
                 Cfg.Callback(text)
             end 
             
+            -- Explicitly focus on tap/click so mobile devices open the native keyboard.
+            Items.Input.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.Touch
+                    or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    task.defer(function()
+                        if Items.Input and Items.Input.Parent then
+                            Items.Input:CaptureFocus()
+                        end
+                    end)
+                end
+            end)
+
             Items.Input:GetPropertyChangedSignal("Text"):Connect(function()
                 Cfg.Set(Items.Input.Text) 
             end) 
