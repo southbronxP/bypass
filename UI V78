@@ -3301,6 +3301,398 @@ Items.Input = Library:Create("TextBox", {
                     end)
                 end
 
+                local FULL = dim(1, 0)
+                local SANTA_RED = rgb(200, 30, 45)
+                local WHITE = rgb(255, 255, 255)
+                local DARK = rgb(28, 28, 28)
+                local SKIN = rgb(255, 205, 170)
+                local BROWN = rgb(150, 100, 60)
+                local DBROWN = rgb(110, 76, 46)
+                local sparkColors = {WHITE, GOLD, GREEN, RED}
+                local say, wave, fly = function() end, function() end, function() end
+                local flying = false
+
+                if Items.TabHolderFrame then
+                    local santa = Library:Create("Frame", {
+                        Parent = Items.TabHolderFrame; Name = "\0"; BackgroundTransparency = 1;
+                        AnchorPoint = vec2(0.5, 1); Position = dim2(0.5, 0, 1, -8);
+                        Size = dim2(0, 120, 0, 104); BorderSizePixel = 0; ZIndex = 6;
+                    })
+
+                    local function part(x, y, w, h, col, radius, z, parent)
+                        local f = Library:Create("Frame", {
+                            Parent = parent or santa; Name = "\0"; BackgroundColor3 = col;
+                            Position = dim2(0, x, 0, y); Size = dim2(0, w, 0, h);
+                            BorderSizePixel = 0; ZIndex = 6 + (z or 0);
+                        })
+                        if radius then
+                            Library:Create("UICorner", {Parent = f; CornerRadius = radius})
+                        end
+                        return f
+                    end
+
+                    local function present(x, y, w, h, body, ribbon, z)
+                        part(x, y, w, h, body, dim(0, 2), z)
+                        part(x + w / 2 - 2, y, 4, h, ribbon, nil, z + 1)
+                        part(x, y + h / 2 - 2, w, 4, ribbon, nil, z + 1)
+                    end
+
+                    local function bow(x, y, col, z)
+                        part(x - 5, y - 4, 7, 6, col, FULL, z)
+                        part(x - 1, y - 4, 7, 6, col, FULL, z)
+                    end
+
+                    present(2, 82, 22, 16, GOLD, GREEN, 0)
+                    bow(13, 82, GREEN, 2)
+                    present(86, 76, 20, 20, rgb(46, 160, 90), RED, 0)
+                    present(89, 62, 14, 14, BLUE, GOLD, 0)
+                    bow(96, 62, GOLD, 2)
+                    present(106, 82, 14, 14, GOLD, RED, 0)
+                    bow(113, 82, RED, 2)
+
+                    local armL = part(30, 58, 12, 26, SANTA_RED, dim(0, 6), 0)
+                    armL.AnchorPoint = vec2(0.5, 0)
+                    armL.Position = dim2(0, 36, 0, 58)
+                    armL.Rotation = 8
+                    local mittenL = part(0, 0, 12, 10, WHITE, FULL, 3, armL)
+                    mittenL.AnchorPoint = vec2(0.5, 0.5)
+                    mittenL.Position = dim2(0.5, 0, 1, 0)
+                    local cuffL = part(0, 0, 12, 4, WHITE, dim(0, 2), 2, armL)
+                    cuffL.AnchorPoint = vec2(0.5, 0.5)
+                    cuffL.Position = dim2(0.5, 0, 1, -4)
+
+                    part(72, 56, 13, 26, SANTA_RED, dim(0, 6), 0)
+                    part(72, 76, 13, 4, WHITE, dim(0, 2), 2)
+                    part(72, 78, 12, 10, WHITE, FULL, 3)
+
+                    part(34, 50, 44, 46, SANTA_RED, dim(0, 10), 1)
+                    part(34, 50, 6, 46, rgb(170, 22, 38), dim(0, 8), 2)
+                    part(34, 92, 44, 5, WHITE, dim(0, 3), 2)
+                    part(54, 50, 4, 28, WHITE, nil, 2)
+                    part(53, 56, 5, 5, DARK, FULL, 3)
+                    part(53, 66, 5, 5, DARK, FULL, 3)
+
+                    part(34, 76, 44, 7, DARK, nil, 3)
+                    part(49, 75, 14, 9, GOLD, dim(0, 2), 4)
+                    part(52, 77, 8, 5, DARK, nil, 5)
+
+                    part(38, 94, 16, 8, DARK, dim(0, 3), 3)
+                    part(58, 94, 16, 8, DARK, dim(0, 3), 3)
+                    part(38, 94, 16, 3, WHITE, dim(0, 2), 4)
+                    part(58, 94, 16, 3, WHITE, dim(0, 2), 4)
+
+                    part(42, 26, 28, 28, SKIN, FULL, 3)
+                    local cheekL = part(44, 38, 6, 5, rgb(240, 140, 140), FULL, 4)
+                    local cheekR = part(62, 38, 6, 5, rgb(240, 140, 140), FULL, 4)
+                    cheekL.BackgroundTransparency = 0.35
+                    cheekR.BackgroundTransparency = 0.35
+
+                    part(40, 40, 32, 26, WHITE, dim(0, 12), 5)
+                    part(40, 58, 12, 10, WHITE, FULL, 5)
+                    part(60, 58, 12, 10, WHITE, FULL, 5)
+                    part(50, 60, 12, 9, rgb(245, 245, 245), FULL, 5)
+                    part(44, 41, 12, 8, rgb(240, 240, 240), FULL, 6)
+                    part(56, 41, 12, 8, rgb(240, 240, 240), FULL, 6)
+                    part(53, 38, 6, 6, rgb(235, 140, 130), FULL, 7)
+
+                    local mouth = part(52, 50, 8, 3, rgb(150, 40, 50), FULL, 8)
+
+                    local eyeL = part(48, 34, 3, 4, DARK, FULL, 6)
+                    local eyeR = part(61, 34, 3, 4, DARK, FULL, 6)
+
+                    local glassL = part(45, 32, 10, 10, WHITE, FULL, 8)
+                    local glassR = part(58, 32, 10, 10, WHITE, FULL, 8)
+                    glassL.BackgroundTransparency = 1
+                    glassR.BackgroundTransparency = 1
+                    Library:Create("UIStroke", {Parent = glassL; Color = GOLD; Thickness = 1})
+                    Library:Create("UIStroke", {Parent = glassR; Color = GOLD; Thickness = 1})
+                    part(55, 36, 3, 1, GOLD, nil, 8)
+
+                    part(41, 14, 30, 16, SANTA_RED, dim(0, 8), 6)
+                    part(41, 14, 8, 16, rgb(170, 22, 38), dim(0, 8), 6)
+                    part(39, 26, 34, 7, WHITE, dim(0, 4), 7)
+                    local pom = part(64, 6, 10, 10, WHITE, FULL, 7)
+
+                    local bubble = Library:Create("Frame", {
+                        Parent = santa; Name = "\0"; BackgroundColor3 = WHITE; BackgroundTransparency = 1;
+                        Position = dim2(0, 62, 0, -14); Size = dim2(0, 62, 0, 20); BorderSizePixel = 0; ZIndex = 20;
+                    })
+                    Library:Create("UICorner", {Parent = bubble; CornerRadius = dim(0, 8)})
+                    local bubbleText = Library:Create("TextLabel", {
+                        Parent = bubble; Name = "\0"; BackgroundTransparency = 1; Size = dim2(1, 0, 1, 0);
+                        Text = "Ho ho ho!"; TextSize = 12; TextColor3 = SANTA_RED; TextTransparency = 1;
+                        FontFace = font; ZIndex = 21;
+                    })
+
+                    local clicker = Library:Create("TextButton", {
+                        Parent = santa; Name = "\0"; BackgroundTransparency = 1; Text = "";
+                        AutoButtonColor = false; Size = dim2(1, 0, 1, 0); ZIndex = 30; BorderSizePixel = 0;
+                    })
+                    clicker.MouseButton1Click:Connect(function()
+                        if not flying then
+                            task.spawn(fly)
+                        end
+                    end)
+
+                    local saying = false
+                    say = function(text, hold)
+                        if saying then return end
+                        saying = true
+                        task.spawn(function()
+                            local fast = TweenInfo.new(0.35, Enum.EasingStyle.Sine)
+                            local quick = TweenInfo.new(0.2, Enum.EasingStyle.Sine)
+                            bubbleText.Text = text
+                            Library:Tween(bubble, {BackgroundTransparency = 0.05}, fast)
+                            Library:Tween(bubbleText, {TextTransparency = 0}, fast)
+                            local elapsed = 0
+                            while elapsed < hold do
+                                Library:Tween(mouth, {Size = dim2(0, 8, 0, 6)}, quick)
+                                task.wait(0.25)
+                                Library:Tween(mouth, {Size = dim2(0, 8, 0, 3)}, quick)
+                                task.wait(0.25)
+                                elapsed += 0.5
+                            end
+                            Library:Tween(bubble, {BackgroundTransparency = 1}, fast)
+                            Library:Tween(bubbleText, {TextTransparency = 1}, fast)
+                            saying = false
+                        end)
+                    end
+
+                    wave = function()
+                        local info = TweenInfo.new(0.3, Enum.EasingStyle.Sine)
+                        for _ = 1, 4 do
+                            Library:Tween(armL, {Rotation = 70}, info)
+                            task.wait(0.3)
+                            Library:Tween(armL, {Rotation = 25}, info)
+                            task.wait(0.3)
+                        end
+                        Library:Tween(armL, {Rotation = 8}, info)
+                    end
+
+                    task.spawn(function()
+                        local up = false
+                        while Win.Parent do
+                            up = not up
+                            if Win.Visible and not window.Tweening then
+                                local info = TweenInfo.new(1.1, Enum.EasingStyle.Sine)
+                                Library:Tween(santa, {Position = dim2(0.5, 0, 1, up and -13 or -8)}, info)
+                                Library:Tween(pom, {Position = dim2(0, up and 66 or 64, 0, up and 8 or 6)}, info)
+                            end
+                            task.wait(1.1)
+                        end
+                    end)
+
+                    task.spawn(function()
+                        while Win.Parent do
+                            task.wait(rng:NextNumber(3, 6))
+                            if Win.Visible and not window.Tweening then
+                                eyeL.BackgroundTransparency = 1
+                                eyeR.BackgroundTransparency = 1
+                                task.wait(0.12)
+                                eyeL.BackgroundTransparency = 0
+                                eyeR.BackgroundTransparency = 0
+                            end
+                        end
+                    end)
+
+                    task.spawn(function()
+                        while Win.Parent do
+                            task.wait(9)
+                            if Win.Visible and not window.Tweening and not flying then
+                                say("Ho ho ho!", 2)
+                                if rng:NextNumber() < 0.5 then
+                                    wave()
+                                end
+                            end
+                        end
+                    end)
+                end
+
+                local function spark(px, py)
+                    local size = rng:NextInteger(3, 6)
+                    local f = Library:Create("Frame", {
+                        Parent = Library.Items; Name = "\0"; AnchorPoint = vec2(0.5, 0.5);
+                        Position = dim_offset(px + rng:NextNumber(-6, 6), py + rng:NextNumber(-8, 8));
+                        Size = dim2(0, size, 0, size); BorderSizePixel = 0; ZIndex = 499;
+                        BackgroundColor3 = sparkColors[rng:NextInteger(1, #sparkColors)];
+                    })
+                    Library:Create("UICorner", {Parent = f; CornerRadius = FULL})
+                    Library:Tween(f, {
+                        Position = dim_offset(px + rng:NextNumber(-20, 20), py + rng:NextNumber(20, 50));
+                        BackgroundTransparency = 1;
+                    }, TweenInfo.new(0.9, Enum.EasingStyle.Sine))
+                    task.delay(1, function() f:Destroy() end)
+                end
+
+                local function dropGift(px, py)
+                    local box = Library:Create("Frame", {
+                        Parent = Library.Items; Name = "\0"; AnchorPoint = vec2(0.5, 0.5);
+                        Position = dim_offset(px, py); Size = dim2(0, 12, 0, 12);
+                        BackgroundColor3 = palette[rng:NextInteger(1, #palette)]; BorderSizePixel = 0; ZIndex = 499;
+                    })
+                    local rib = Library:Create("Frame", {
+                        Parent = box; Name = "\0"; AnchorPoint = vec2(0.5, 0); Position = dim2(0.5, 0, 0, 0);
+                        Size = dim2(0, 3, 1, 0); BackgroundColor3 = WHITE; BorderSizePixel = 0; ZIndex = 500;
+                    })
+                    local info = TweenInfo.new(1.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+                    Library:Tween(box, {
+                        Position = dim_offset(px + rng:NextNumber(-25, 25), py + 110);
+                        Rotation = rng:NextNumber(-200, 200);
+                        BackgroundTransparency = 1;
+                    }, info)
+                    Library:Tween(rib, {BackgroundTransparency = 1}, info)
+                    task.delay(1.4, function() box:Destroy() end)
+                end
+
+                local function buildFlyer(dir)
+                    local flyer = Library:Create("Frame", {
+                        Parent = Library.Items; Name = "\0"; BackgroundTransparency = 1;
+                        AnchorPoint = vec2(0.5, 0.5); Size = dim2(0, 200, 0, 70);
+                        BorderSizePixel = 0; ZIndex = 500;
+                    })
+                    local scale = InputService.TouchEnabled and 0.7 or 1
+                    Library:Create("UIScale", {Parent = flyer; Scale = scale})
+
+                    local legs, glow = {}, nil
+
+                    local function fpart(x, y, w, h, col, radius, z)
+                        local px = (dir == -1) and (200 - x - w) or x
+                        local f = Library:Create("Frame", {
+                            Parent = flyer; Name = "\0"; BackgroundColor3 = col;
+                            Position = dim2(0, px, 0, y); Size = dim2(0, w, 0, h);
+                            BorderSizePixel = 0; ZIndex = 500 + (z or 0);
+                        })
+                        if radius then
+                            Library:Create("UICorner", {Parent = f; CornerRadius = radius})
+                        end
+                        return f
+                    end
+
+                    local function leg(x, y, w, h, phase)
+                        local f = fpart(x, y, w, h, DBROWN, dim(0, 1), 1)
+                        f.AnchorPoint = vec2(0.5, 0)
+                        f.Position = dim2(0, f.Position.X.Offset + w / 2, 0, y)
+                        legs[#legs + 1] = {obj = f, phase = phase}
+                    end
+
+                    local function reindeer(ox, lead, phase)
+                        leg(ox + 3, 50, 3, 13, phase)
+                        leg(ox + 9, 50, 3, 13, phase + math.pi)
+                        leg(ox + 19, 50, 3, 13, phase + math.pi)
+                        leg(ox + 25, 50, 3, 13, phase)
+                        fpart(ox - 3, 40, 4, 5, WHITE, FULL, 2)
+                        fpart(ox, 38, 30, 14, BROWN, dim(0, 6), 2)
+                        fpart(ox + 8, 38, 3, 14, SANTA_RED, nil, 3)
+                        fpart(ox + 27, 29, 8, 14, BROWN, dim(0, 4), 2)
+                        fpart(ox + 26, 36, 8, 3, GOLD, nil, 3)
+                        fpart(ox + 30, 26, 14, 11, BROWN, dim(0, 5), 3)
+                        fpart(ox + 31, 22, 4, 5, DBROWN, FULL, 2)
+                        fpart(ox + 32, 14, 2, 12, DBROWN, nil, 2)
+                        fpart(ox + 37, 14, 2, 12, DBROWN, nil, 2)
+                        fpart(ox + 29, 17, 5, 2, DBROWN, nil, 2)
+                        fpart(ox + 37, 17, 5, 2, DBROWN, nil, 2)
+                        fpart(ox + 36, 29, 2, 2, DARK, FULL, 4)
+                        if lead then
+                            glow = fpart(ox + 38, 24, 12, 12, RED, FULL, 3)
+                            glow.BackgroundTransparency = 0.6
+                            fpart(ox + 41, 27, 5, 5, RED, FULL, 4)
+                        else
+                            fpart(ox + 41, 27, 5, 5, DBROWN, FULL, 4)
+                        end
+                    end
+
+                    fpart(60, 43, 44, 1, rgb(240, 215, 120), nil, 1)
+                    fpart(134, 44, 16, 1, rgb(240, 215, 120), nil, 1)
+
+                    reindeer(104, false, 0)
+                    reindeer(150, true, math.pi)
+
+                    fpart(2, 56, 68, 3, GOLD, dim(0, 2), 1)
+                    fpart(66, 48, 6, 11, GOLD, dim(0, 3), 1)
+                    fpart(8, 14, 16, 24, BROWN, dim(0, 7), 1)
+                    fpart(12, 12, 8, 4, GOLD, dim(0, 2), 2)
+                    fpart(12, 6, 8, 8, GREEN, dim(0, 1), 1)
+                    fpart(15, 6, 2, 8, RED, nil, 2)
+
+                    fpart(28, 28, 22, 12, SANTA_RED, dim(0, 4), 1)
+                    fpart(44, 30, 10, 5, SANTA_RED, dim(0, 2), 1)
+                    fpart(52, 31, 5, 5, WHITE, FULL, 2)
+                    fpart(30, 14, 16, 16, SKIN, FULL, 1)
+                    fpart(29, 23, 18, 13, WHITE, dim(0, 6), 2)
+                    fpart(29, 8, 18, 10, SANTA_RED, dim(0, 5), 2)
+                    fpart(28, 16, 20, 4, WHITE, dim(0, 2), 3)
+                    fpart(24, 10, 6, 6, WHITE, FULL, 3)
+                    fpart(38, 20, 2, 3, DARK, FULL, 3)
+                    fpart(41, 22, 4, 4, rgb(235, 140, 130), FULL, 3)
+
+                    fpart(6, 36, 58, 16, SANTA_RED, dim(0, 6), 3)
+                    fpart(60, 28, 10, 18, SANTA_RED, dim(0, 5), 3)
+                    fpart(4, 26, 10, 22, SANTA_RED, dim(0, 5), 3)
+                    fpart(6, 47, 58, 3, GOLD, nil, 4)
+
+                    return flyer, legs, glow, scale
+                end
+
+                fly = function()
+                    if flying then return end
+                    flying = true
+
+                    local vp = Camera.ViewportSize
+                    local dir = (rng:NextNumber() < 0.5) and 1 or -1
+                    local flyer, legs, glow, scale = buildFlyer(dir)
+                    local baseY = rng:NextNumber(0.18, 0.7) * vp.Y
+                    local amp = rng:NextNumber(25, 55)
+                    local span = vp.X + 440
+                    local duration = rng:NextNumber(6.5, 8.5)
+                    local elapsed, nextSpark, nextGift = 0, 0, 0.8
+
+                    say("Look up!", 2)
+                    task.spawn(wave)
+
+                    while elapsed < duration and Win.Parent do
+                        local dt = RunService.Heartbeat:Wait()
+                        elapsed += dt
+                        local t = math.min(elapsed / duration, 1)
+                        local x = (dir == 1) and (-220 + span * t) or (vp.X + 220 - span * t)
+                        local y = baseY + math.sin(t * math.pi * 2) * amp
+                        local slope = amp * math.pi * 2 * math.cos(t * math.pi * 2) / span
+
+                        flyer.Position = dim_offset(x, y)
+                        flyer.Rotation = math.deg(math.atan(slope)) * dir
+
+                        for _, l in legs do
+                            l.obj.Rotation = math.sin(elapsed * 14 + l.phase) * 28
+                        end
+
+                        if glow then
+                            glow.BackgroundTransparency = 0.55 + 0.25 * math.sin(elapsed * 9)
+                        end
+
+                        if elapsed >= nextSpark then
+                            nextSpark = elapsed + 0.04
+                            spark(x - dir * 95 * scale, y + 10 * scale)
+                        end
+
+                        if elapsed >= nextGift then
+                            nextGift = elapsed + 1.3
+                            dropGift(x - dir * 40 * scale, y + 20 * scale)
+                        end
+                    end
+
+                    flyer:Destroy()
+                    flying = false
+                end
+
+                task.spawn(function()
+                    task.wait(rng:NextNumber(10, 16))
+                    while Win.Parent do
+                        if Win.Visible and not window.Tweening and not flying then
+                            fly()
+                        end
+                        task.wait(rng:NextNumber(25, 45))
+                    end
+                end)
+
                 Notifications:Create({Name = "Merry Christmas! Festive theme loaded"})
             end)
 
