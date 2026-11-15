@@ -30,14 +30,15 @@
 
     local themes = {
         preset = {
-            accent = rgb(255, 0, 1),
-            window_outline = rgb(0, 0, 0),
-            inline = rgb(25, 27, 27),
-            background = rgb(17, 19, 19),
-            visible_backgrounds = rgb(20, 23, 22),
-            text_color = rgb(221, 223, 222),
-            glow = rgb(255, 0, 0),  -- Pure red
-            deselected = rgb(89, 91, 91),
+            -- Christmas palette: evergreen, cranberry, warm ivory and gold.
+            accent = rgb(205, 48, 66),
+            window_outline = rgb(218, 174, 91),
+            inline = rgb(19, 45, 34),
+            background = rgb(10, 25, 20),
+            visible_backgrounds = rgb(15, 36, 27),
+            text_color = rgb(245, 239, 220),
+            glow = rgb(218, 174, 91),
+            deselected = rgb(137, 163, 145),
         },
         utility = {},
         gradients = {
@@ -1321,12 +1322,12 @@
 
                 Items.TitleHolder = Library:Create("Frame", {
                     Parent = Items.PageHolder;
-                    BackgroundTransparency = 1;
+                    BackgroundTransparency = 0;
+                    BackgroundColor3 = rgb(12, 39, 28);
                     Name = "\0";
                     BorderColor3 = rgb(0, 0, 0);
                     Size = dim2(1, 0, 0, 43);
                     BorderSizePixel = 0;
-                    BackgroundColor3 = rgb(255, 255, 255)
                 });
 
                 Items.Filler = Library:Create("Frame", {
@@ -1334,10 +1335,10 @@
                     Name = "\0";
                     Position = dim2(0, 0, 1, -1);
                     BorderColor3 = rgb(0, 0, 0);
-                    Size = dim2(1, 0, 0, 1);
+                    Size = dim2(1, 0, 0, 2);
                     BorderSizePixel = 0;
-                    BackgroundColor3 = themes.preset.inline
-                }); Library:Themify(Items.Filler, "inline", "BackgroundColor3")
+                    BackgroundColor3 = rgb(218, 174, 91)
+                });
 
                 Items.SectionTitle = Library:Create("TextLabel", {
                     RichText = true;
@@ -1363,6 +1364,32 @@
                     PaddingLeft = dim(0, 13)
                 });
 
+                Library:Create("UIGradient", {
+                    Parent = Items.TitleHolder;
+                    Rotation = 0;
+                    Color = rgbseq{
+                        rgbkey(0, rgb(12, 48, 33)),
+                        rgbkey(0.62, rgb(18, 55, 39)),
+                        rgbkey(1, rgb(91, 24, 35))
+                    }
+                });
+
+                Items.WinterLabel = Library:Create("TextLabel", {
+                    Parent = Items.TitleHolder;
+                    Name = "WinterEdition";
+                    AnchorPoint = vec2(1, 0.5);
+                    Position = dim2(1, -12, 0.5, 0);
+                    Size = dim2(0, 150, 0, 24);
+                    BackgroundTransparency = 1;
+                    BorderSizePixel = 0;
+                    Text = "❄  WINTER EDITION  ❄";
+                    TextColor3 = rgb(241, 218, 166);
+                    TextSize = 10;
+                    Font = Enum.Font.GothamBold;
+                    TextXAlignment = Enum.TextXAlignment.Right;
+                    ZIndex = 3;
+                });
+
                 Items.Pages = Library:Create("Frame", {
                     Parent = Items.PageHolder;
                     Name = "\0";
@@ -1386,7 +1413,7 @@
                 }); Library:Themify(Items.Fade, "background", "BackgroundColor3")
 
                 Items.Glow = Library:Create("ImageLabel", {
-                    ImageColor3 = rgb(255, 0, 0);
+                    ImageColor3 = themes.preset.glow;
                     ScaleType = Enum.ScaleType.Slice;
                     ImageTransparency = 0.6499999761581421;
                     BorderColor3 = rgb(0, 0, 0);
@@ -1400,6 +1427,44 @@
                     BorderSizePixel = 0;
                     SliceCenter = rect(vec2(21, 21), vec2(79, 79))
                 }); Library:Themify(Items.Glow, "glow", "ImageColor3")
+
+                -- Optional holiday background music.
+                -- Set this to an audio asset ID you own or have permission to use.
+                -- Leave blank to keep music disabled.
+                local CHRISTMAS_MUSIC_ID = ""
+                if CHRISTMAS_MUSIC_ID ~= "" then
+                    local HolidayMusic = Instance.new("Sound")
+                    HolidayMusic.Name = "SkidHubHolidayMusic"
+                    HolidayMusic.SoundId = "rbxassetid://" .. CHRISTMAS_MUSIC_ID:gsub("%D", "")
+                    HolidayMusic.Volume = 0.22
+                    HolidayMusic.Looped = true
+                    HolidayMusic.Parent = SoundService
+                    HolidayMusic:Play()
+
+                    Library:Connection(Items.Window.Destroying, function()
+                        HolidayMusic:Stop()
+                        HolidayMusic:Destroy()
+                    end)
+                end
+
+                -- Subtle snowflake accents stay inside the title strip.
+                for i = 1, 5 do
+                    Library:Create("TextLabel", {
+                        Parent = Items.TitleHolder;
+                        Name = "HolidaySnowflake";
+                        BackgroundTransparency = 1;
+                        BorderSizePixel = 0;
+                        Text = (i % 2 == 0) and "✦" or "❄";
+                        TextColor3 = (i % 2 == 0) and rgb(231, 190, 111) or rgb(224, 239, 229);
+                        TextTransparency = 0.18;
+                        TextSize = (i % 2 == 0) and 10 or 12;
+                        Font = Enum.Font.GothamBold;
+                        Size = dim2(0, 18, 0, 18);
+                        Position = dim2(0, 175 + (i * 25), 0, 12 + ((i % 2) * 5));
+                        ZIndex = 3;
+                        Active = false;
+                    })
+                end
             end
 
             do
