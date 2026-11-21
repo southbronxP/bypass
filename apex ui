@@ -225,15 +225,15 @@ do
 
 	local Themes = {
         ["Preset"] = {
-            ["Window Outline"] = FromRGB(0, 34, 37),
-            ["Accent"] = FromRGB(94, 213, 213),
-            ["Background 1"] = FromRGB(17, 21, 27),
+            ["Window Outline"] = FromRGB(54, 25, 86),
+            ["Accent"] = FromRGB(170, 95, 255),
+            ["Background 1"] = FromRGB(17, 15, 24),
             ["Text"] = FromRGB(255, 255, 255),
-            ["Inline"] = FromRGB(19, 25, 31),
-            ["Element"] = FromRGB(32, 38, 48),
+            ["Inline"] = FromRGB(23, 18, 32),
+            ["Element"] = FromRGB(39, 29, 53),
             ["Inactive Text"] = FromRGB(185, 185, 185),
-            ["Border"] =  FromRGB(46, 52, 61),
-            ["Background 2"] = FromRGB(24, 28, 36)
+            ["Border"] =  FromRGB(67, 48, 88),
+            ["Background 2"] = FromRGB(27, 21, 38)
         }
 	}
 
@@ -788,7 +788,7 @@ do
 	end
 
 	Library.Holder = Instances:Create("ScreenGui", {
-		Parent = HiddenUI,
+		Parent = HiddenUI
 		Name = "\0",
 		ZIndexBehavior = Enum.ZIndexBehavior.Global,
 		DisplayOrder = 2,
@@ -797,7 +797,7 @@ do
 	})
 
 	Library.UnusedHolder = Instances:Create("ScreenGui", {
-		Parent = HiddenUI,
+		Parent = HiddenUI
 		Name = "\0",
 		ZIndexBehavior = Enum.ZIndexBehavior.Global,
 		Enabled = false,
@@ -1130,7 +1130,7 @@ do
 					Name = "\0",
 					Visible = false,
 					Position = UDim2New(0, 1032, 0, 123),
-					BorderColor3 = FromRGB(0, 34, 37),
+					BorderColor3 = FromRGB(54, 25, 86),
 					Size = UDim2New(0, 232, 0, 265),
 					BorderSizePixel = 2,
 					BackgroundColor3 = FromRGB(17, 21, 27),
@@ -2555,7 +2555,7 @@ do
 					Name = "\0",
 					AnchorPoint = Vector2New(0.5, 0),
 					Position = UDim2New(0.5, 0, 0, 25),
-					BorderColor3 = FromRGB(0, 34, 37),
+					BorderColor3 = FromRGB(54, 25, 86),
 					Size = UDim2New(0, 180, 0, 30),
 					BorderSizePixel = 2,
 					BackgroundColor3 = FromRGB(17, 21, 27),
@@ -3397,7 +3397,7 @@ do
 					Name = "\0",
 					AnchorPoint = Vector2New(0.5, 0.5),
 					Position = UDim2New(0.5, 0, 0.5, 0),
-					BorderColor3 = FromRGB(0, 34, 37),
+					BorderColor3 = FromRGB(54, 25, 86),
 					Size = UDim2FromOffset(GetResponsiveWindowSize().X, GetResponsiveWindowSize().Y),
 					BorderSizePixel = 2,
 					BackgroundColor3 = FromRGB(17, 21, 27),
@@ -3457,7 +3457,7 @@ do
 					Name = "\0",
 					BackgroundTransparency = 1,
 					Position = UDim2New(0, 1, 0, 1),
-					BorderColor3 = FromRGB(0, 34, 37),
+					BorderColor3 = FromRGB(54, 25, 86),
 					Size = UDim2New(1, -2, 1, -2),
 					BorderSizePixel = 0,
 					BackgroundColor3 = FromRGB(255, 255, 255),
@@ -3466,7 +3466,7 @@ do
 				Instances:Create("UIStroke", {
 					Parent = Items["Inline"].Instance,
 					Name = "\0",
-					Color = FromRGB(0, 34, 37),
+					Color = FromRGB(54, 25, 86),
 					LineJoinMode = Enum.LineJoinMode.Miter,
 					ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 				}):AddToTheme({ Color = "Window Outline" })
@@ -3474,7 +3474,7 @@ do
 				Items["Logo"] = Instances:Create("ImageLabel", {
 					Parent = Items["Inline"].Instance,
 					Name = "\0",
-					ImageColor3 = FromRGB(255, 0, 0),
+					ImageColor3 = FromRGB(255, 255, 255),
 					BorderColor3 = FromRGB(0, 0, 0),
 					Image = "rbxassetid://109404145649380",
 					BackgroundTransparency = 1,
